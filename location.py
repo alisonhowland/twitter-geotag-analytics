@@ -4,7 +4,7 @@ import geocoder
 import os
 import pickle
 from spacy import displacy
-#Comment for test purposes
+
 READ_PATH = "/var/local/tempTestData/"
 WRITE_PATH = "/var/local/data_out/"
 
