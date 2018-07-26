@@ -1,9 +1,10 @@
-import spacy
+#import spacy
 import redis
 import geocoder
 import os
+import sys
 import pickle
-from spacy import displacy
+#from spacy import displacy
 
 READ_PATH = "/var/local/tempTestData/"
 WRITE_PATH = "/var/local/data_out/"
@@ -32,14 +33,14 @@ def getLocation(json_text):
    start2 = len("user_location") + start1 + 1
    end1 = json_text.find("\"", start2)
    end2 = json_text.find("\"", end1 + 1)
-   return json_text[end1 + 1 : end2 - 1]
+   return json_text[end1 + 1 : end2]
 
 #Writes the json file with the specified file name to the 'constant' output directory with the
 #appropriate coordinates and text. Now more generic!
 def writeCoordinates(coordinates, file_name, json_text):
    index = json_text.find("Coordinates")
    index2 = json_text.find("\"", index + len("Coordinates") + 2)
-   outString = json_text[: index2 + 1] + str(coordinates) + json_text[index2 + 3 :]
+   outString = json_text[: index2 + 1] + str(coordinates) + json_text[index2 + 1 :]
    writer = open(WRITE_PATH + file_name, "w")
    writer.write(outString)
    writer.close()
@@ -55,7 +56,7 @@ def getTweet(json_text):
    start2 = len("tweet_text") + start1 + 1
    end1 = json_text.find("\"", start2)
    end2 = json_text.find("\"", end1 + 1)
-   return json_text[end1 + 1 : end2 - 1]
+   return json_text[end1 + 1 : end2]
 
 #Returns the language code of the JSON file. We probably shouldn't try to parse 
 #non-english languages with SpaCy
@@ -67,23 +68,30 @@ def getLanguage(json_text):
 
 
 #'main' method as of now
+
 red = redis.Redis(host='localhost', port=6379, password='')
 files = os.listdir(READ_PATH)
 for file_name in files:
+   
    json = open(READ_PATH + file_name, "r")
-   data = json.read()
+   data = json.readline()
    json.close()
+   
+   data = ''
+   with open(READ_PATH + file_name, 'r') as fp:
+      for line in fp:
+         data += line
    if hasLocation(data):
       location = getLocation(data)
       if redisHasKey(red, location.lower()):
-         coordinates = red.get(location)
+         coordinates = red.get(location.lower()).decode('utf-8')
       else:
          coordinates = geocoder.arcgis(location).latlng
          red.set(location.lower(), str(coordinates))
-      print(location, coordinates)
+      print(location, coordinates, file_name)
       writeCoordinates(coordinates, file_name, data)
       os.remove(READ_PATH + file_name)
-save_dictionary(dictionary)
+red.save()
 
 
 '''
@@ -98,18 +106,22 @@ for key in dictionary:
 print(i)
 
 
-print(red.get("va"))
-print(red.get("tx"))
+red = redis.Redis(host='localhost', port=6379, password='')
+va = red.get("va").decode('utf-8')
+print(va)
+print(va[2: (len(va) - 1)])
+print(red.get("tx").decode('utf-8'))
 print(red.get("vermont"))
 print(red.dbsize())
+red.save()
 
-
-reader = open(READ_PATH + "1215309993635823.json")
+reader = open(WRITE_PATH + "1284241289117647.json")
 text = reader.read()
 reader.close()
 print(getLocation(text), getTweet(text))
-writeCoordinates([1,1], "1215309993635823.json", text)
-'''
+print(getTweet(text))
+#writeCoordinates([1,1], "1285127566282033.json", text)
+#'''
 #nlp = spacy.load('en_core_web_lg')
 #sample = open("tweet.txt")
 #doc = nlp(sample.read())
