@@ -62,6 +62,26 @@ def getTweet(json_text):
 def hasTweet(json_text):
    return len(getTweet(json_text)) >= 1
 
+#Returns a string that is the best location that could be pulled from the tweet
+def getTweetLocation(json_text, red, nlp):
+   if hasTweet(json_text):
+      tweet = getTweet(json_text)
+   else:
+      return None
+   doc = nlp(tweet)
+   entities = doc.ents
+   numEntities = len(entities)
+   bestEntity = ""
+   for entity in entities:
+      if (entity.label_ == "LOC" or ent.label_ == "GPE") and redisHasKey(red, ent.text.lower()):
+         bestEntity = ent.text #Cross-checks redis db to find entity that is most likely to be a place
+   if bestEntity == "" and numEntities == 0:
+      return None
+   elif bestEntity == "" and numEntities > 0:   
+      return entities[0]
+   else:
+      return bestEntity
+
 #Returns the language code of the JSON file. We probably shouldn't try to parse 
 #non-english languages with SpaCy
 def getLanguage(json_text):
@@ -73,30 +93,29 @@ def getLanguage(json_text):
 
 
 #'main' method as of now
-'''
+
 nlp = spacy.load('en_core_web_lg')
 red = redis.Redis(host='localhost', port=6379, password='')
 files = os.listdir(READ_PATH)
 for file_name in files:
    
    json = open(READ_PATH + file_name, "r")
-   data = json.readline()
+   data = json.read()
    json.close()
    
-   data = ''
-   with open(READ_PATH + file_name, 'r') as fp:
-      for line in fp:
-         data += line
-   if hasLocation(data):
+   if hasLocation(data): #it goes into this block if there's a location in the location tag
       location = getLocation(data)
-      if redisHasKey(red, location.lower()):
-         coordinates = red.get(location.lower()).decode('utf-8')
-      else:
-         coordinates = geocoder.arcgis(location).latlng
+   else:
+      location = getTweetLocation(data, red, nlp)
+   if redisHasKey(red, location.lower()):
+      coordinates = red.get(location.lower()).decode('utf-8')
+   else:
+      coordinates = geocoder.arcgis(location).latlng
+      if coordiantes != None:
          red.set(location.lower(), str(coordinates))
-      print(location, coordinates, file_name)
-      writeCoordinates(coordinates, file_name, data)
-      os.remove(READ_PATH + file_name)
+         print(location, coordinates, file_name)
+         writeCoordinates(coordinates, file_name, data)
+   os.remove(READ_PATH + file_name)
 red.save()
 
 
