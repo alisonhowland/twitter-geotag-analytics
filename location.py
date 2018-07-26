@@ -67,16 +67,17 @@ def getTweetLocation(json_text, red, nlp):
    if hasTweet(json_text):
       tweet = getTweet(json_text)
    else:
-      return None
+      return ""
    doc = nlp(tweet)
    entities = doc.ents
    numEntities = len(entities)
    bestEntity = ""
    for entity in entities:
-      if (entity.label_ == "LOC" or ent.label_ == "GPE") and redisHasKey(red, ent.text.lower()):
+      if (entity.label_ == "LOC" or entity.label_ == "GPE") and redisHasKey(red, entity.text.lower()):
          bestEntity = ent.text #Cross-checks redis db to find entity that is most likely to be a place
+
    if bestEntity == "" and numEntities == 0:
-      return None
+      return ""
    elif bestEntity == "" and numEntities > 0:   
       return entities[0]
    else:
@@ -107,14 +108,16 @@ for file_name in files:
       location = getLocation(data)
    else:
       location = getTweetLocation(data, red, nlp)
+
    if redisHasKey(red, location.lower()):
       coordinates = red.get(location.lower()).decode('utf-8')
    else:
       coordinates = geocoder.arcgis(location).latlng
-      if coordiantes != None:
-         red.set(location.lower(), str(coordinates))
-         print(location, coordinates, file_name)
-         writeCoordinates(coordinates, file_name, data)
+
+   if coordinates != None:
+      red.set(location.lower(), str(coordinates))
+      print(location, coordinates, file_name)
+      writeCoordinates(coordinates, file_name, data)
    os.remove(READ_PATH + file_name)
 red.save()
 
