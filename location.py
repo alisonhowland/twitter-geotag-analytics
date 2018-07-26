@@ -114,8 +114,9 @@ for file_name in files:
       location = getLocation(data)
    else:
       location = getTweetLocation(data, red, nlp)
-
-   if redisHasKey(red, location.lower()):
+   if location == "": #This should give a speed boost
+      coordinates = None
+   elif redisHasKey(red, location.lower()):
       coordinates = red.get(location.lower()).decode('utf-8')
    else:
       coordinates = geocoder.arcgis(location).latlng
