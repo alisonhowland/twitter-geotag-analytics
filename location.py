@@ -1,4 +1,4 @@
-#import spacy
+import spacy
 import redis
 import geocoder
 import os
@@ -58,6 +58,10 @@ def getTweet(json_text):
    end2 = json_text.find("\"", end1 + 1)
    return json_text[end1 + 1 : end2]
 
+#Returns True if there is anything in the text tag, and False otherwise
+def hasTweet(json_text):
+   return len(getTweet(json_text)) >= 1
+
 #Returns the language code of the JSON file. We probably shouldn't try to parse 
 #non-english languages with SpaCy
 def getLanguage(json_text):
@@ -70,6 +74,7 @@ def getLanguage(json_text):
 
 #'main' method as of now
 '''
+nlp = spacy.load('en_core_web_lg')
 red = redis.Redis(host='localhost', port=6379, password='')
 files = os.listdir(READ_PATH)
 for file_name in files:
