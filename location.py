@@ -60,15 +60,16 @@ def getTweet(json_text):
 
 #Returns the language code of the JSON file. We probably shouldn't try to parse 
 #non-english languages with SpaCy
-#DEPRECIATED AS OF THE NEW METADATA MODEL
 def getLanguage(json_text):
-   index = json_text.find(",\"lang\":")
-   index2 = json_text.find(",\"user_description")
-   return json_text[index + 9 : index2 - 1]
+   start1 = json_text.find(",\"lang\":")
+   start2 = start1 + len(",\"lang\":") + 1
+   end = json_text.find("\"", start2)
+   print(start1, start2, end)
+   return json_text[start2: end]
 
 
 #'main' method as of now
-
+'''
 red = redis.Redis(host='localhost', port=6379, password='')
 files = os.listdir(READ_PATH)
 for file_name in files:
@@ -95,17 +96,6 @@ red.save()
 
 
 '''
-i = 0
-red = redis.Redis(host='localhost', port=6379, password='')
-dictionary = load_dictionary()
-for key in dictionary:
-   print(key, dictionary[key])
-   if not(redisHasKey(red, key.lower())):
-      red.set(key.lower(), str(dictionary[key]))
-   i += 1
-print(i)
-
-
 red = redis.Redis(host='localhost', port=6379, password='')
 va = red.get("va").decode('utf-8')
 print(va)
@@ -115,11 +105,11 @@ print(red.get("vermont"))
 print(red.dbsize())
 red.save()
 
-reader = open(WRITE_PATH + "1284241289117647.json")
+reader = open(WRITE_PATH + "1285647590049125.json")
 text = reader.read()
 reader.close()
 print(getLocation(text), getTweet(text))
-print(getTweet(text))
+print(getLanguage(text))
 #writeCoordinates([1,1], "1285127566282033.json", text)
 #'''
 #nlp = spacy.load('en_core_web_lg')
