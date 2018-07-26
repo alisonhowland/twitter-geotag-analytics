@@ -64,6 +64,9 @@ def hasTweet(json_text):
 
 #Returns a string that is the best location that could be pulled from the tweet
 def getTweetLocation(json_text, red, nlp):
+   if getLanguage(json_text) != "en": #this program is not eqipped to deal with foriegn languages
+      return ""
+
    if hasTweet(json_text):
       tweet = getTweet(json_text)
    else:
@@ -79,7 +82,7 @@ def getTweetLocation(json_text, red, nlp):
    if bestEntity == "" and numEntities == 0:
       return ""
    elif bestEntity == "" and numEntities > 0:   
-      return entities[0].text
+      return entities[numEntities - 1].text
    else:
       return bestEntity
 
@@ -89,7 +92,6 @@ def getLanguage(json_text):
    start1 = json_text.find(",\"lang\":")
    start2 = start1 + len(",\"lang\":") + 1
    end = json_text.find("\"", start2)
-   print(start1, start2, end)
    return json_text[start2: end]
 
 
