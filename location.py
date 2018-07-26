@@ -127,6 +127,7 @@ for file_name in files:
    else:
       print(file_name + " deleted!")
    os.remove(READ_PATH + file_name)
+   files = os.listdir(READ_PATH)
 red.save()
 
 
