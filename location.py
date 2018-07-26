@@ -104,6 +104,7 @@ def getLanguage(json_text):
 nlp = spacy.load('en_core_web_lg', disable=['parser', 'tagger', 'textcat'])
 red = redis.Redis(host='localhost', port=6379, password='')
 files = os.listdir(READ_PATH)
+i = 1
 for file_name in files:
    
    json = open(READ_PATH + file_name, "r")
@@ -128,8 +129,12 @@ for file_name in files:
    else:
       print(file_name + " deleted!")
    os.remove(READ_PATH + file_name)
-   files = os.listdir(READ_PATH)
+   #files = os.listdir(READ_PATH)
+   i += 1
+   if i == len(files):
+      files.append(os.listdir(READ_PATH))
 red.save()
+print(red.dbsize())
 
 
 '''
