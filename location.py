@@ -82,7 +82,11 @@ def getTweetLocation(json_text, red, nlp):
    if bestEntity == "" and numEntities == 0:
       return ""
    elif bestEntity == "" and numEntities > 0:   
-      return entities[numEntities - 1].text
+      ret = entities[int(numEntities / 2)].text
+      if ret.find("@") >= 0 or ret.find("RT") >= 0:
+         return ""
+      else:
+         return ret
    else:
       return bestEntity
 
@@ -97,7 +101,7 @@ def getLanguage(json_text):
 
 #'main' method as of now
 
-nlp = spacy.load('en_core_web_lg')
+nlp = spacy.load('en_core_web_lg', disable=['parser', 'tagger', 'textcat'])
 red = redis.Redis(host='localhost', port=6379, password='')
 files = os.listdir(READ_PATH)
 for file_name in files:
@@ -120,6 +124,8 @@ for file_name in files:
       red.set(location.lower(), str(coordinates))
       print(location, coordinates, file_name)
       writeCoordinates(coordinates, file_name, data)
+   else:
+      print(file_name + " deleted!")
    os.remove(READ_PATH + file_name)
 red.save()
 
