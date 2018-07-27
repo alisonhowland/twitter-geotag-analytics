@@ -35,12 +35,23 @@ def getLocation(json_text):
    end2 = json_text.find("\"", end1 + 1)
    return json_text[end1 + 1 : end2]
 
+#Sets the user's location in the json file. Only to be used from within writeCoordinates
+#returns json_text formatted with location
+def setLocation(location, json_text):
+   index = json_text.find("user_location")
+   index2 = json_text.find("\"", index + len("user_location") + 2)
+   outString = json_text[: index2 + 1] + location + json_text[index2 + 1 :]
+   return outString
+
 #Writes the json file with the specified file name to the 'constant' output directory with the
 #appropriate coordinates and text. Now more generic!
-def writeCoordinates(coordinates, file_name, json_text):
+#Also writes the location if applicable
+def writeCoordinates(coordinates, file_name, json_text, location):
    index = json_text.find("Coordinates")
    index2 = json_text.find("\"", index + len("Coordinates") + 2)
    outString = json_text[: index2 + 1] + str(coordinates) + json_text[index2 + 1 :]
+   if not hasLocation(json_text):
+      outString = setLocation(location, outString)
    writer = open(WRITE_PATH + file_name, "w")
    writer.write(outString)
    writer.close()
@@ -125,7 +136,7 @@ for file_name in files:
    if coordinates != None:
       red.set(location.lower(), str(coordinates))
       print(location, coordinates, file_name)
-      writeCoordinates(coordinates, file_name, data)
+      writeCoordinates(coordinates, file_name, data, location)
    else:
       print(file_name + " deleted!")
    os.remove(READ_PATH + file_name)
