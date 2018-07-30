@@ -44,6 +44,7 @@ def setLocation(location, json_text):
    return outString
 
 #Sets the Lat and Long tags within the JSON file. Only to be used within writeCoordinates
+#TODO fix None issue
 def setLatLong(coordinates, json_text):
    longitude = coordinates[1 : coordinates.find(",")]
    latitude = coordinates[coordinates.find(",") + 2 : len(coordinates) - 2]
@@ -160,7 +161,6 @@ for file_name in files:
    else:
       print(file_name + " deleted!")
    os.remove(READ_PATH + file_name)
-   #files = os.listdir(READ_PATH)
    i += 1
    if i == len(files):
       print(i, len(files))
