@@ -84,7 +84,7 @@ def getTweetLocation(json_text, red, nlp):
       return ""
    doc = nlp(tweet)
    entities = doc.ents
-   locEntities = {}
+   locEntities = []
    bestEntity = ""
    for entity in entities:
       if (entity.label_ == "LOC" or entity.label_ == "GPE"):
