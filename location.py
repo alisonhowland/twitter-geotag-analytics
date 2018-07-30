@@ -96,7 +96,7 @@ def getTweetLocation(json_text, red, nlp):
    if bestEntity == "" and numEntities == 0:
       return ""
    elif bestEntity == "" and numEntities > 0:   
-      ret = locEntities[numEntities / 2].text
+      ret = locEntities[int(numEntities / 2)].text
       if ret.find("@") >= 0 or ret.find("RT") >= 0:
          return ""
       else:
