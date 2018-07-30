@@ -46,17 +46,17 @@ def setLocation(location, json_text):
 #Sets the Lat and Long tags within the JSON file. Only to be used within writeCoordinates
 def setLatLong(coordinates, json_text):
    longitude = coordinates[1 : coordinates.find(",")]
-   latitude = coordinates[coordinates.find(",") + 1 : len(coordinates) - 2]
+   latitude = coordinates[coordinates.find(",") + 2 : len(coordinates) - 2]
    start1 = json_text.find("\"Long\"")
    start2 = start1 + len("\"Long\"") + 1
    end1 = json_text.find("\"", start2)
    end2 = end1 + 1
-   json_text = json_text[: end1] + longitude + json_text[end2 :]
+   json_text = json_text[: end1 + 1] + longitude + json_text[end2 :]
    start1 = json_text.find("\"Lat\"")
    start2 = start1 + len("\"Lat\"") + 1
    end1 = json_text.find("\"", start2)
    end2 = end1 + 1
-   json_text = json_text[: end1] + latitude + json_text[end2 :]
+   json_text = json_text[: end1 + 1] + latitude + json_text[end2 :]
    return json_text
 
 #Writes the json file with the specified file name to the 'constant' output directory with the
