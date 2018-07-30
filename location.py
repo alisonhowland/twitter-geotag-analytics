@@ -43,8 +43,16 @@ def setLocation(location, json_text):
    outString = json_text[: index2 + 1] + location + json_text[index2 + 1 :]
    return outString
 
+#Fills in the prediction_source tag with the appropriate text and returns the modified text
+def setPrediction(prediction, json_text):
+   start1 = json_text.find("prediction_source")
+   start2 = start1 + len("prediction_source") + 1
+   end1 = json_text.find("\"", start2)
+   end2 = end1 + 1
+   json_text = json_text[: end1 + 1] + prediction + json_text[end2 :]
+   return json_text
+
 #Sets the Lat and Long tags within the JSON file. Only to be used within writeCoordinates
-#TODO fix None issue
 def setLatLong(coordinates, json_text):
    longitude = coordinates[1 : coordinates.find(",")]
    latitude = coordinates[coordinates.find(",") + 2 : len(coordinates) - 2]
@@ -145,16 +153,18 @@ for file_name in files:
    
    if hasLocation(data): #it goes into this block if there's a location in the location tag
       location = getLocation(data)
+      data = setPrediction("LOCATION", data)
    else:
       location = getTweetLocation(data, red, nlp)
+      data = setPrediction("TWEET", data)
    if location == "": #This should give a speed boost
       coordinates = None
    elif redisHasKey(red, location.lower()):
       coordinates = red.get(location.lower()).decode('utf-8')
    else:
-      coordinates = geocoder.arcgis(location).latlng
+      coordinates = str(geocoder.arcgis(location).latlng)
 
-   if coordinates != None:
+   if coordinates != None and coordinates != "None":
       red.set(location.lower(), str(coordinates))
       print(location, coordinates, file_name)
       writeCoordinates(coordinates, file_name, data, location)
