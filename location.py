@@ -84,16 +84,19 @@ def getTweetLocation(json_text, red, nlp):
       return ""
    doc = nlp(tweet)
    entities = doc.ents
-   numEntities = len(entities)
+   locEntities = {}
    bestEntity = ""
    for entity in entities:
-      if (entity.label_ == "LOC" or entity.label_ == "GPE") and redisHasKey(red, entity.text.lower()):
-         bestEntity = entity.text #Cross-checks redis db to find entity that is most likely to be a place
-
+      if (entity.label_ == "LOC" or entity.label_ == "GPE"):
+         locEntities.append(entity)
+         if redisHasKey(red, entity.text.lower()):
+            bestEntity = entity.text #Cross-checks redis db to find entity that is most likely to be a place
+   
+   numEntities = len(locEntities)
    if bestEntity == "" and numEntities == 0:
       return ""
    elif bestEntity == "" and numEntities > 0:   
-      ret = entities[int(numEntities / 2)].text
+      ret = locEntities[numEntities / 2].text
       if ret.find("@") >= 0 or ret.find("RT") >= 0:
          return ""
       else:
