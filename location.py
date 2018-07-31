@@ -138,6 +138,7 @@ def getLanguage(json_text):
    end = json_text.find("\"", start2)
    return json_text[start2: end]
 
+#Returns the coordinates from the location formatted as [long, lat] instead of [lat, long]
 def geocoderCall(location):
    key = str(geocoder.arcgis(location).latlng)
    if key == "None" or key == None:
@@ -173,7 +174,7 @@ for file_name in files:
    else:
       coordinates = geocoderCall(location)
 
-   if coordinates != None and coordinates != "None":
+   if coordinates != None and coordinates != "None" and coordinates != "[on, on]":
       red.set(location.lower(), str(coordinates))
       print(location, coordinates, file_name)
       writeCoordinates(coordinates, file_name, data, location)
