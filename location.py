@@ -140,11 +140,12 @@ def getLanguage(json_text):
 
 def geocoderCall(location):
    key = str(geocoder.arcgis(location).latlng)
-   if key == None or key == "None":
+   if key == "None" or key == None:
       return None
-   lat = key[1:key.find(",")]
-   lng = key[key.find(",") + 2: len(key) - 1]
-   return "[" + lng + ", " +  lat + "]"
+   else:
+      lat = key[1:key.find(",")]
+      lng = key[key.find(",") + 2: len(key) - 1]
+      return "[" + lng + ", " +  lat + "]"
 
 
 #'main' method as of now
