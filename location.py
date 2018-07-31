@@ -138,6 +138,14 @@ def getLanguage(json_text):
    end = json_text.find("\"", start2)
    return json_text[start2: end]
 
+def geocoderCall(location):
+   key = str(geocoder.arcgis(location).latlng)
+   if key == None or key == "None":
+      return None
+   lat = key[1:key.find(",")]
+   lng = key[key.find(",") + 2: len(key) - 1]
+   return "[" + lng + ", " +  lat + "]"
+
 
 #'main' method as of now
 
@@ -162,7 +170,7 @@ for file_name in files:
    elif redisHasKey(red, location.lower()):
       coordinates = red.get(location.lower()).decode('utf-8')
    else:
-      coordinates = str(geocoder.arcgis(location).latlng)
+      coordinates = geocoderCall(location)
 
    if coordinates != None and coordinates != "None":
       red.set(location.lower(), str(coordinates))
