@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if ps -ef | grep -v grep | grep location.py ; then
+    exit 0
+else
+   python3.6 /var/local/code/location.py
+   exit 0
+fi
