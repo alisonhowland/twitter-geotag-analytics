@@ -202,7 +202,8 @@ for file_name in files:
    else: #Getting into funky threading stuff here. 
       tweet = Tweet(data, location, file_name)
       thread[thread_counter].tweetList.append(tweet)
-      coordinates = geocoderCall(thread[thread_counter])
+      if not thread[old_counter].running:
+         coordinates = geocoderCall(thread[thread_counter])
       if coordinates == "None": #This  means coordinates is running
          thread_counter += 1
          if thread_counter > 99: #Prevents IndexOutOfBounds Exception
