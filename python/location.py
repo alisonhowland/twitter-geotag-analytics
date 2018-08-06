@@ -141,10 +141,10 @@ def getLanguage(json_text):
    return json_text[start2: end]
 
 #Returns the coordinates from the location formatted as [long, lat] instead of [lat, long]
-def geocoderCall(tweet_list):
-   if len(tweet_list) >= 10:
-      thread = TweetThread(tweet_list)
-      thread.start
+def geocoderCall(thread):
+   if len(thread.tweetList) >= 10 and not thread.running:
+      thread.start()
+      return "None"
    else:
       return None
 
@@ -161,7 +161,11 @@ def swapCoordinates(key):
 
 #'main' method as of now
 
-tweet_list = []
+thread = []
+thread_counter = 0
+old_counter = 0
+for i in range(100):
+   thread.append(TweetThread([]))
 nlp = spacy.load('en_core_web_lg', disable=['parser', 'tagger', 'textcat']) #makes spacy faster
 red = redis.Redis(host='localhost', port=6379, password='')
 files = os.listdir(READ_PATH)
@@ -195,9 +199,26 @@ for file_name in files:
       coordinates = None
    elif redisHasKey(red, location.lower()):
       coordinates = red.get(location.lower()).decode('utf-8')
-   else:
-      tweet_list.append(Tweet(data, location, file_name))
-      coordinates = geocoderCall(tweets)
+   else: #Getting into funky threading stuff here. 
+      thread[thread_counter].tweetList.append(Tweet(data, location, file_name))
+      print("********CONFUSED*********\n\n\n\n\n\n" + str(thread_counter))
+      coordinates = geocoderCall(thread[thread_counter])
+      if coordinates == "None": #This  means coordinates is running
+         thread_counter += 1
+         if thread_counter > 99:
+            thread_counter = 0
+      if thread[old_counter].done: #Even funkier threading stuff here
+         tweet_list = thread[old_counter].tweetList
+         thread = TweetThread([])
+         for tweet in tweet_list:
+            tweet.coordinates = swapCoordinates(tweet.coordinates)
+            if coordinates != None and coordinates != "None" and coordinates != "[on, on]":
+               red.set(tweet.location.lower(), str(tweet.coordinates))
+               print(tweet.location, tweet.coordinates, tweet.file_name)
+               writeCoordinates(tweet.coordinates, tweet.file_name, tweet.json_text, tweet.location)
+               old_counter += 1
+               if old_counter > 99:
+                  old_counter = 0
 
    if coordinates != None and coordinates != "None" and coordinates != "[on, on]":
       red.set(location.lower(), str(coordinates))

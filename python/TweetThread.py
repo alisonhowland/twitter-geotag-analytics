@@ -9,12 +9,13 @@ class TweetThread(threading.Thread):
         threading.Thread.__init__(self)
         self.tweetList = tweetList
         self.done = False
+        self.running = False
 
     def run(self):
-        with requests.Session() as session:
-            for tweet in self.tweetList:
-                tweet.coordinates = geocoder.arcgis(tweet.location, session=session).latlng
-                self.done = True
+        self.running = True
+        for tweet in self.tweetList:
+            tweet.coordinates = str(geocoder.arcgis(tweet.location).latlng)
+            self.done = True
 
 '''
 tlist = [Tweet("json_text", "Virginia", "testfile.txt")]
