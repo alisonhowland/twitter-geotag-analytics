@@ -15,6 +15,7 @@ class TweetThread(threading.Thread):
         self.running = True
         for tweet in self.tweetList:
             tweet.coordinates = str(geocoder.arcgis(tweet.location).latlng)
+            print("\n\n\n\n*********" + tweet.file_name + ": " + tweet.coordinates + "*********\n\n\n\n\n")
             self.done = True
 
 '''

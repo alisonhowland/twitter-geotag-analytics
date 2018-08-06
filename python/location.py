@@ -201,24 +201,25 @@ for file_name in files:
       coordinates = red.get(location.lower()).decode('utf-8')
    else: #Getting into funky threading stuff here. 
       tweet = Tweet(data, location, file_name)
-      print("********CONFUSED*********\n\n\n\n\n\n" + str(thread_counter) + " " + str(tweet))
-      thread[thread_counter].tweetList.append(Tweet(data, location, file_name))
+      thread[thread_counter].tweetList.append(tweet)
       coordinates = geocoderCall(thread[thread_counter])
       if coordinates == "None": #This  means coordinates is running
          thread_counter += 1
-         if thread_counter > 99:
+         if thread_counter > 99: #Prevents IndexOutOfBounds Exception
             thread_counter = 0
       if thread[old_counter].done: #Even funkier threading stuff here
+         print("*********IN THE BLOCK*********\n\n\n\n")
          tweet_list = thread[old_counter].tweetList
-         thread = TweetThread([])
+         thread[old_counter] = TweetThread([])
          for tweet in tweet_list:
+            print("**************Pre-Swap*********\n\n" + tweet.file_name + ": " + tweet.coordinates + "\n\n")
             tweet.coordinates = swapCoordinates(tweet.coordinates)
-            if coordinates != None and coordinates != "None" and coordinates != "[on, on]":
+            if tweet.coordinates != None and tweet.coordinates != "None" and tweet.coordinates != "[on, on]":
                red.set(tweet.location.lower(), str(tweet.coordinates))
-               print(tweet.location, tweet.coordinates, tweet.file_name)
+               print("*********SUCCESS*********\n\n\n\n" + tweet.file_name + ": " + tweet.coordinates)
                writeCoordinates(tweet.coordinates, tweet.file_name, tweet.json_text, tweet.location)
                old_counter += 1
-               if old_counter > 99:
+               if old_counter > 99: #Prevent IndexOutOfBoundsException
                   old_counter = 0
 
    if coordinates != None and coordinates != "None" and coordinates != "[on, on]":
