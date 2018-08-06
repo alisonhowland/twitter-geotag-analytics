@@ -212,7 +212,7 @@ for file_name in files:
          print("*********IN THE BLOCK*********\n\n\n\n")
          tweet_list = thread[old_counter].tweetList
          thread[old_counter] = TweetThread([])
-         for tweet in tweet_list:
+         for tweet in tweet_list: #loops through tweets in list
             tweet.coordinates = swapCoordinates(tweet.coordinates)
             if tweet.coordinates != None and tweet.coordinates != "None" and tweet.coordinates != "[on, on]":
                red.set(tweet.location.lower(), str(tweet.coordinates))
