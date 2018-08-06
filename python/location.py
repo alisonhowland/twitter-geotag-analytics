@@ -141,8 +141,16 @@ def getLanguage(json_text):
    return json_text[start2: end]
 
 #Returns the coordinates from the location formatted as [long, lat] instead of [lat, long]
-def geocoderCall(location):
-   key = str(geocoder.arcgis(location).latlng)
+def geocoderCall(tweet_list):
+   if len(tweet_list) >= 10:
+      thread = TweetThread(tweet_list)
+      thread.start
+   else:
+      return None
+
+#Swaps the order of the coordinates in string form and returns the properly formatted string
+#Key is the coordinates variable
+def swapCoordinates(key):
    if key == "None" or key == None:
       return None
    else:
@@ -153,6 +161,7 @@ def geocoderCall(location):
 
 #'main' method as of now
 
+tweet_list = []
 nlp = spacy.load('en_core_web_lg', disable=['parser', 'tagger', 'textcat']) #makes spacy faster
 red = redis.Redis(host='localhost', port=6379, password='')
 files = os.listdir(READ_PATH)
@@ -187,7 +196,8 @@ for file_name in files:
    elif redisHasKey(red, location.lower()):
       coordinates = red.get(location.lower()).decode('utf-8')
    else:
-      coordinates = geocoderCall(location)
+      tweet_list.append(Tweet(data, location, file_name))
+      coordinates = geocoderCall(tweets)
 
    if coordinates != None and coordinates != "None" and coordinates != "[on, on]":
       red.set(location.lower(), str(coordinates))
