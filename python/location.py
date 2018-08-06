@@ -212,7 +212,6 @@ for file_name in files:
          tweet_list = thread[old_counter].tweetList
          thread[old_counter] = TweetThread([])
          for tweet in tweet_list:
-            print("**************Pre-Swap*********\n\n" + tweet.file_name + ": " + tweet.coordinates + "\n\n")
             tweet.coordinates = swapCoordinates(tweet.coordinates)
             if tweet.coordinates != None and tweet.coordinates != "None" and tweet.coordinates != "[on, on]":
                red.set(tweet.location.lower(), str(tweet.coordinates))
