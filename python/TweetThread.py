@@ -23,5 +23,5 @@ thread = TweetThread(tlist)
 thread.start()
 while(not thread.done):
     print("waiting")
-print(thread.tweetList[0].coordinates)
+print(thread.tweetList[0].coordinates, str(thread.tweetList[0]))
 '''

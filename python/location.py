@@ -200,8 +200,9 @@ for file_name in files:
    elif redisHasKey(red, location.lower()):
       coordinates = red.get(location.lower()).decode('utf-8')
    else: #Getting into funky threading stuff here. 
+      tweet = Tweet(data, location, file_name)
+      print("********CONFUSED*********\n\n\n\n\n\n" + str(thread_counter) + " " + str(tweet))
       thread[thread_counter].tweetList.append(Tweet(data, location, file_name))
-      print("********CONFUSED*********\n\n\n\n\n\n" + str(thread_counter))
       coordinates = geocoderCall(thread[thread_counter])
       if coordinates == "None": #This  means coordinates is running
          thread_counter += 1
