@@ -1,5 +1,3 @@
-
-
 <!--  This page accesses the "tweet" layer of GeoServer and display using WFS on a global map (OpenStreetMap)  -->
 <!--  Created 2018-07-17  -->
 <!--  Last updated pdated 2018-07-23  -->
@@ -32,7 +30,7 @@
      {
        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
                          '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-                         'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+			 'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
        maxZoom: 20,
        id: 'mapbox.streets',
        minZoom: 2
@@ -51,7 +49,7 @@
      service : 'WFS',
      version : '2.0',
      request : 'GetFeature',
-     typeName : 'cite:tweets_with_location',
+     typeName : 'cite:tweet_locations_predicted',
      outputFormat : 'text/javascript',
      format_options : 'callback:getJson',
      SrsName : 'EPSG:4326'
@@ -235,7 +233,6 @@ $.ajax({
      });
  
      tweets.addTo(map);
-     -->
     /**This chunk here is what I was working on with geoserver. It is incomplete and
     may be completely wrong
      let defaultParameters = {
