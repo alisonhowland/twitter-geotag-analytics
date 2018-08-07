@@ -164,7 +164,7 @@ def swapCoordinates(key):
 thread = []
 thread_counter = 0
 old_counter = 0
-for i in range(100):
+for i in range(10):
    thread.append(TweetThread([]))
 nlp = spacy.load('en_core_web_lg', disable=['parser', 'tagger', 'textcat']) #makes spacy faster
 red = redis.Redis(host='localhost', port=6379, password='')
@@ -206,7 +206,7 @@ for file_name in files:
          coordinates = geocoderCall(thread[thread_counter])
       if coordinates == "None": #This  means coordinates is running
          thread_counter += 1
-         if thread_counter > 99: #Prevents IndexOutOfBounds Exception
+         if thread_counter > 9: #Prevents IndexOutOfBounds Exception
             thread_counter = 0
       if thread[old_counter].done: #Even funkier threading stuff here
          print("*********IN THE BLOCK*********\n\n\n\n")
@@ -219,7 +219,7 @@ for file_name in files:
                print("*********SUCCESS*********\n\n\n\n" + tweet.file_name + ": " + tweet.coordinates)
                writeCoordinates(tweet.coordinates, tweet.file_name, tweet.json_text, tweet.location)
                old_counter += 1
-               if old_counter > 99: #Prevent IndexOutOfBoundsException
+               if old_counter > 9: #Prevent IndexOutOfBoundsException
                   old_counter = 0
 
    if coordinates != None and coordinates != "None" and coordinates != "[on, on]":
@@ -233,6 +233,19 @@ for file_name in files:
    if i == len(files):
       print(i, len(files))
       files.extend(os.listdir(READ_PATH))
+
+#Everything below is crazy thread shit
+for activeThread in thread:
+   activeThread.join()
+for inactiveThread in thread:
+   tweet_list = inactiveThread.tweetList
+   for tweet in tweet_list:
+      tweet.coordinates = swapCoordinates(tweet.coordinates) 
+      if tweet.coordinates != None and tweet.coordinates != "None" and tweet.coordinates != "[o    n, on]":
+         red.set(tweet.location.lower(), str(tweet.coordinates))
+         print("*********SUCCESS*********\n\n\n\n" + tweet.file_name + ": " + tweet.coordinates
+         writeCoordinates(tweet.coordinates, tweet.file_name, tweet.json_text, tweet.location)
+
 red.save()
 print(red.dbsize())
 
