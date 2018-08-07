@@ -2,6 +2,7 @@ import spacy
 import redis
 import geocoder
 import os
+import time
 import sys
 import pickle
 from TweetObj import Tweet
@@ -171,7 +172,7 @@ red = redis.Redis(host='localhost', port=6379, password='')
 files = os.listdir(READ_PATH)
 i = 0
 for file_name in files:
-   
+
    json = open(READ_PATH + file_name, "r")
    data = json.read()
    json.close()
@@ -232,6 +233,7 @@ for file_name in files:
    i += 1
    if i == len(files):
       print(i, len(files))
+      time.sleep(10)
       files.extend(os.listdir(READ_PATH))
 
 #Everything below is crazy thread shit
