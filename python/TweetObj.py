@@ -1,3 +1,4 @@
+# A small Object used to store the data necessary for TweetThread to work
 class Tweet(object):
    def __init__(self, json_text, location, file_name):
       self.json_text = str(json_text)
