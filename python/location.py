@@ -209,7 +209,7 @@ for file_name in files:
          thread_counter += 1
          if thread_counter > 99: #Prevents IndexOutOfBounds Exception
             thread_counter = 0
-      if thread[old_counter].done: #Even funkier threading stuff here
+      if thread[old_counter].done: #Writes the coordinates gotten in the thread
          print("*********IN THE BLOCK*********\n\n\n\n")
          tweet_list = thread[old_counter].tweetList
          thread[old_counter] = TweetThread([])
@@ -233,18 +233,18 @@ for file_name in files:
    i += 1
    if i == len(files):
       print(i, len(files))
-      time.sleep(10)
+      time.sleep(10) #Allows time for nifi to get some more files since this is faster now
       files.extend(os.listdir(READ_PATH))
 
 #Everything below is crazy thread shit
-for activeThread in thread:
+for activeThread in thread: #When the program has ended waits for the threads to finish geocoder calls
    if activeThread.running:
       activeThread.join()
-for inactiveThread in thread:
+for inactiveThread in thread: #Writes tweets from geocoder calls to json file
    tweet_list = inactiveThread.tweetList
    for tweet in tweet_list:
       tweet.coordinates = swapCoordinates(tweet.coordinates) 
-      if tweet.coordinates != None and tweet.coordinates != "None" and tweet.coordinates != "[o    n, on]" and tweet.coordinates != "[, ]":
+      if tweet.coordinates != None and tweet.coordinates != "None" and tweet.coordinates != "[on, on]" and tweet.coordinates != "[, ]":
          red.set(tweet.location.lower(), str(tweet.coordinates))
          print("*********SUCCESS*********\n\n\n\n" + tweet.file_name + ": " + tweet.coordinates)
          writeCoordinates(tweet.coordinates, tweet.file_name, tweet.json_text, tweet.location)
