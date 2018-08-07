@@ -3,7 +3,7 @@ import threading
 import requests
 from TweetObj import Tweet
 
-
+#The point of this class is to make geocoder calls for tweet locations in a separate thread from the main in order to make location.py more efficient
 class TweetThread(threading.Thread):
     def __init__(self, tweetList):
         threading.Thread.__init__(self)
@@ -19,12 +19,3 @@ class TweetThread(threading.Thread):
             print("\n\n\n\n*********" + str(i) + "\\" + str(len(self.tweetList)) + "//////////" + tweet.file_name + ": " + tweet.coordinates + "*********\n\n\n\n\n")
             i += 1
         self.done = True
-
-'''
-tlist = [Tweet("json_text", "Virginia", "testfile.txt")]
-thread = TweetThread(tlist)
-thread.start()
-while(not thread.done):
-    print("waiting")
-print(thread.tweetList[0].coordinates, str(thread.tweetList[0]))
-'''

@@ -165,7 +165,7 @@ def swapCoordinates(key):
 thread = []
 thread_counter = 0
 old_counter = 0
-for i in range(10):
+for i in range(100):
    thread.append(TweetThread([]))
 nlp = spacy.load('en_core_web_lg', disable=['parser', 'tagger', 'textcat']) #makes spacy faster
 red = redis.Redis(host='localhost', port=6379, password='')
@@ -207,7 +207,7 @@ for file_name in files:
          coordinates = geocoderCall(thread[thread_counter])
       if coordinates == "None": #This  means coordinates is running
          thread_counter += 1
-         if thread_counter > 9: #Prevents IndexOutOfBounds Exception
+         if thread_counter > 99: #Prevents IndexOutOfBounds Exception
             thread_counter = 0
       if thread[old_counter].done: #Even funkier threading stuff here
          print("*********IN THE BLOCK*********\n\n\n\n")
@@ -220,7 +220,7 @@ for file_name in files:
                print("*********SUCCESS*********\n\n\n\n" + tweet.file_name + ": " + tweet.coordinates)
                writeCoordinates(tweet.coordinates, tweet.file_name, tweet.json_text, tweet.location)
                old_counter += 1
-               if old_counter > 9: #Prevent IndexOutOfBoundsException
+               if old_counter > 99: #Prevent IndexOutOfBoundsException
                   old_counter = 0
 
    if coordinates != None and coordinates != "None" and coordinates != "[on, on]":
@@ -251,29 +251,3 @@ for inactiveThread in thread:
 
 red.save()
 print(red.dbsize())
-
-
-'''
-red = redis.Redis(host='localhost', port=6379, password='')
-va = red.get("va").decode('utf-8')
-print(va)
-print(va[2: (len(va) - 1)])
-print(red.get("tx").decode('utf-8'))
-print(red.get("vermont"))
-print(red.dbsize())
-red.save()
-
-reader = open(WRITE_PATH + "1285647590049125.json")
-text = reader.read()
-reader.close()
-print(getLocation(text), getTweet(text))
-print(getLanguage(text))
-#writeCoordinates([1,1], "1285127566282033.json", text)
-#'''
-#nlp = spacy.load('en_core_web_lg')
-#sample = open("tweet.txt")
-#doc = nlp(sample.read())
-#sample.close()
-#for ent in doc.ents:
-#   if ent.label_ == "LOC" or ent.label_ == "GPE":
-#      print(ent.text, ent.label_, str(geocoder.arcgis(ent.text).latlng))
