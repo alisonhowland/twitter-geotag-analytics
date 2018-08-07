@@ -236,14 +236,15 @@ for file_name in files:
 
 #Everything below is crazy thread shit
 for activeThread in thread:
-   activeThread.join()
+   if activeThread.running:
+      activeThread.join()
 for inactiveThread in thread:
    tweet_list = inactiveThread.tweetList
    for tweet in tweet_list:
       tweet.coordinates = swapCoordinates(tweet.coordinates) 
-      if tweet.coordinates != None and tweet.coordinates != "None" and tweet.coordinates != "[o    n, on]":
+      if tweet.coordinates != None and tweet.coordinates != "None" and tweet.coordinates != "[o    n, on]" and tweet.coordinates != "[, ]":
          red.set(tweet.location.lower(), str(tweet.coordinates))
-         print("*********SUCCESS*********\n\n\n\n" + tweet.file_name + ": " + tweet.coordinates
+         print("*********SUCCESS*********\n\n\n\n" + tweet.file_name + ": " + tweet.coordinates)
          writeCoordinates(tweet.coordinates, tweet.file_name, tweet.json_text, tweet.location)
 
 red.save()
