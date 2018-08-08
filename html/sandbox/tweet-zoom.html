@@ -1,184 +1,209 @@
 <!--  This is the minimum possible html bloat -->
 
 <html>
- <head>
-   <title>Twitter zoom</title>
+   <head>
+      <title>Twitter zoom</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+      <meta charset="utf-8">
+      <link rel="stylesheet" 
+	    href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" 
+	    integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" 
+	    crossorigin=""/>
+      <link rel="stylesheet" href="https://jackdougherty.github.io/Leaflet-Coordinates-Control/Control.Coordinates.css" />
+      <link rel="stylesheet" href="https://jackdougherty.github.io/leaflet.zoomlabel/L.Control.ZoomLabel.css" />
+	    <link rel="stylesheet" href="css/style.css" />
+   </head>
    
-   <meta charset="utf-8">
-   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin=""/>
-   <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js" integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==" crossorigin=""></script>
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js" crossorigin=""></script>
- <!--<script src="js/scripts.js"></script>-->
+   <body>
+   <!-- div to display map-->
+   <div id="map" style="width: 1200px; height: 800px;"></div>
+   
+   <! -- Load Leaflet -->
+   <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js" 
+	      integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==" 
+	      crossorigin=""> </script>
+   <!-- load jQuery: instructions at https://code.jquery.com/ -->
+       <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+   <!-- Load jQuery -->
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js" 
+	      crossorigin=""> </script>
 
- </head>
- <body>
+    <!-- load Esri Leaflet: instructions at https://esri.github.io/esri-leaflet/download/-->
 
-   <div id="testmap" style="width: 1200px; height: 800px;"></div>
+<script src="https://unpkg.com/esri-leaflet@2.2.2/dist/esri-leaflet.js"
+    integrity="sha512-cll/dcqNKG7yfQBrTbRNzGQ70Bh4m+J5jnvU97tPyMnWsD1Ry+CXi0JE+T7Rk54pdJEYlRgXtpwxa9sUqzUAyg=="
+    crossorigin=""></script>
 
+   <script type="text/javascript" src="https://jackdougherty.github.io/Leaflet-Coordinates-Control/Control.Coordinates.js"></script>
+   <!-- Load the javascript file for this map page-->
+   <script type="text/javascript" src="js/script.js"></script>
+ 
    <script>
+// initialize the map
+/*
+   let map = L.map('testmap').setView([0,0 ], 0);
+// load a tile layer
+L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw',
+{
+attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+maxZoom: 20,
+id: 'mapbox.streets',
+minZoom: 2
+}).addTo(map);
+// Define the Geoserver base URL
+var rootUrl = 'http://192.168.16.32:8080/geoserver/cite/ows';
+var wmsURL = 'http://192.168.16.32:8080/geoserver/cite/wms';
  
-   // initialize the map
-    let map = L.map('testmap').setView([0,0 ], 0);
-   // var topPane = map.createPane('leaflet-top-pane', map.getPanes().mapPane);
-   // var bottomPane = map.createPane('leaflet-bottom-pane', map.getPanes().tilePane);
-   // load a tile layer
-    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw',
-     {
-       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-                         '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-                         'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-       maxZoom: 20,
-       id: 'mapbox.streets',
-       minZoom: 2
-     }).addTo(map);
- 
- // Define the Geoserver base URL
- var rootUrl = 'http://192.168.16.32:8080/geoserver/cite/ows';
+function dateFilteredWMSLayer(startDate, endDate){
+    var layer = L.tileLayer.wms(wmsURL, {
+layers: 'cite:tweets_with_location',
+format: 'image/png',
+transparent: true,
+/	CQL_FILTER:'simple_date AFTER ' + startDate + ' AND BEFORE ' + endDate 
+});
+return layer;
+}
 
-
- // Function that returns the WMS map layer
-//function getWMSLayer() {
-    var WMSLayer= L.tileLayer.wms('http://192.168.16.32:8080/geoserver/cite/wms', {
-	layers: 'cite:tweets_with_location',
-	format: 'image/png',
-	transparent: true
-    });
-  //  return WMSLayer;
-//}
+// Create the WMS Layer
+var WMSLayer = dateFilteredWMSLayer('2018-07-22', '2018-08-07');
 
 //var WMSLayer = getWMSLayer();
 map.addLayer(WMSLayer);
 // ------------------------------------------------------
-// --- Function that loads the WFS layer to the map ----
 
-    
 
-    // define WFS default parameters 
+
+// define WFS default parameters 
 let defaultParameters = {
-	service : 'WFS',
-	version : '2.0',
-	request : 'GetFeature',
-	typeName : 'cite:tweets_with_location',
-	outputFormat : 'text/javascript',
-	format_options : 'callback:getJson',
-	SrsName : 'EPSG:4326'
-    };
+service : 'WFS',
+	  version : '2.0',
+	  request : 'GetFeature',
+	  typeName : 'cite:tweets_with_location',
+	  outputFormat : 'text/javascript',
+	  format_options : 'callback:getJson',
+	  SrsName : 'EPSG:4326'
+};
 
 let  parameters = L.Util.extend(defaultParameters);
 
 var WFSLayer = null;
-    // Create url for WFS call
+// Create url for WFS call
 var ajax =  $.ajax({
-	url: rootUrl + L.Util.getParamString(parameters),
-	dataType: 'jsonp',
-	jsonpCallback: 'getJson',
-	success : function (response) {
-	    WFSLayer = L.geoJson(response, {
-		style: function (feature) {
-		    return {
-			stroke: false,
-			fillColor: 'FFFFFF',
-			fillOpacity: 0
-		    };
-		},
-		// Set the popup text/content for each point
-		onEachFeature: function (feature, layer) {
-		    popupOptions = {maxWidth: 200};
-		    layer.bindPopup("<b>" + feature.properties.place_name + "</b><br>"
-			+ "<b>ID: </b><a href='http://192.168.16.31:5601/app/kibana#/discover?_g=()&_a=(columns:!(_source),index:f81e14c0-91b1-11e8-85bf-677bb0bf1eac,interval:auto ,query:(language:lucene,query:%27" + feature.properties.tweet_id + "%27),sort:!(_score,desc))'>" + feature.properties.tweet_id + "</a><br>"
-			+ "<b>Time: </b> " + feature.properties.date +" <br>"
-			+ "<b>Tweet:</b> \"" + feature.properties.text + "\" <br>"
-			+ "<b>Hashtags:</b> \"" + feature.properties.hashtags + "\" <br>"
-			,popupOptions);
-		}
-	    });
+url: rootUrl + L.Util.getParamString(parameters),
+dataType: 'jsonp',
+jsonpCallback: 'getJson',
+success : function (response) {
+WFSLayer = L.geoJson(response, {
+style: function (feature) {
+return {
+stroke: false,
+fillColor: 'FFFFFF',
+fillOpacity: 0
+};
+},
+// Set the popup text/content for each point
+onEachFeature: function (feature, layer) {
+popupOptions = {maxWidth: 200};
+layer.bindPopup("<b>" + feature.properties.place_name + "</b><br>"
+    + "<b>ID: </b><a href='http://192.168.16.31:5601/app/kibana#/discover?_g=()&_a=(columns:!(_source),index:f81e14c0-91b1-11e8-85bf-677bb0bf1eac,interval:auto ,query:(language:lucene,query:%27" + feature.properties.tweet_id + "%27),sort:!(_score,desc))'>" + feature.properties.tweet_id + "</a><br>"
+    + "<b>Time: </b> " + feature.properties.timestamp +" <br>"
+    + "<b>SimpleDate </b> " + feature.properties.simple_date +" <br>"
+    + "<b>Tweet:</b> \"" + feature.properties.text + "\" <br>"
+    + "<b>Hashtags:</b> \"" + feature.properties.hashtags + "\" <br>"
+    ,popupOptions);
+}
+});
 //		    WFSLayer.addTo(map);
-	}
-	    // return WFSLayer;
-  //        overlay = {"Coordinates": WFSLayer};
-   //       L.control.layers(null, overlay).addTo(map);
-  });
-  
- 
+}
+// return WFSLayer;
+//        overlay = {"Coordinates": WFSLayer};
+//       L.control.layers(null, overlay).addTo(map);
+});
+
+
 //  ----------------- END FUNCTION ------------------------
 
 map.on('zoomend', function() {
-    if (map.getZoom() <13){
-        if (map.hasLayer(WFSLayer)) 
-	{
-            map.removeLayer(WFSLayer);
-	}	    
-	if (!map.hasLayer(WMSLayer)) 
-	{
-	    map.addLayer(WMSLayer);
-	} else {
-            console.log("no point layer active");
-        }
-    }
-    if (map.getZoom() >= 13){
-        if (map.hasLayer(WFSLayer)){
-            console.log("layer already added");
-        } else {
-	    map.addLayer(WFSLayer); 
-	   // map.removeLayer(WMSLayer);
-	   // map.removeLayer(WMSLayer);
-        }
-    }
+      if (map.getZoom() <13){
+      if (map.hasLayer(WFSLayer)) 
+      {
+      map.removeLayer(WFSLayer);
+      }	    
+      if (!map.hasLayer(WMSLayer)) 
+      {
+      map.addLayer(WMSLayer);
+      } else {
+      console.log("no point layer active");
+      }
+      }
+      if (map.getZoom() >= 13){
+      if (map.hasLayer(WFSLayer)){
+      console.log("layer already added");
+      } else {
+      map.addLayer(WFSLayer); 
+      // map.removeLayer(WMSLayer);
+      // map.removeLayer(WMSLayer);
+      }
+      }
 });
 
 
 /*maps.addLayer(pts);
- 
-  // Set default parameters for loading GeoJSON data via WFS from tweets
-  var defaultParameters = {
-      service : 'WFS',
-      version : '2.0',
-      request : 'GetFeature',
-      typeName : 'cite:tweets_with_location',
-      outputFormat : 'text/javascript',
-      format_options : 'callback:getJson',
-      SrsName : 'EPSG:4326'
-  };
-   
-  // Set up WFS using JSONP. See following sources for examples and referece:
-    //      https://gis.stackexchange.com/questions/57494/geoserver-2-3-how-to-enable-jsonp 
-      //    https://gis.stackexchange.com/questions/64406/getting-wfs-data-from-geoserver-into-leaflet
- 
-  let parameters = L.Util.extend(defaultParameters);
-  const URL = rootUrl + L.Util.getParamString(parameters);
- 
-  let overlay;
-   
-  $.ajax({
-      url: rootUrl + L.Util.getParamString(parameters),
-      dataType: 'jsonp',
-      jsonpCallback: 'getJson',
-      success : function (response) {
-          WFSLayer = L.geoJson(response, {
-              style: function (feature) {
-                  return {
-                     
-                     stroke:false,
-                      fillColor: 'FFFFFF' ,
-                      fillOpacity:0 
-                  };
-              },
-              // Set the popup text/content for each point
-              onEachFeature: function (feature, layer) {
-                  popupOptions = {maxWidth: 200};
-                  layer.bindPopup("<b>" + feature.properties.place_name + "</b><br>"
-                      + "<b>ID: </b><a href='http://192.168.16.31:5601/app/kibana#/discover?_g=()&_a=(columns:!(_source),index: f81e14c0-91b1-11e8-85bf-677bb0bf1eac,interval:auto,query:(language:lucene,query:%27" + feature.properties.tweet_id + "%27),sor t:!(_score,desc))'>" + feature.properties.tweet_id + "</a><br>"
-                      + "<b>Time: </b> " + feature.properties.date +" <br>"
-                      + "<b>Tweet:</b> \"" + feature.properties.text + "\" <br>"
-                      + "<b>Hashtags:</b> \"" + feature.properties.hashtags + "\" <br>"
-                      + "<b>Language: </b> \"" + feature.properties.lang + "\" <br>"
- 
-                      ,popupOptions);
-              }
-          }).addTo(map);
-  }
-  });
-*/
-   
-    </script>
-</html>
+
+// Set default parameters for loading GeoJSON data via WFS from tweets
+var defaultParameters = {
+service : 'WFS',
+version : '2.0',
+request : 'GetFeature',
+typeName : 'cite:tweets_with_location',
+outputFormat : 'text/javascript',
+format_options : 'callback:getJson',
+SrsName : 'EPSG:4326'
+};
+
+// Set up WFS using JSONP. See following sources for examples and referece:
+//      https://gis.stackexchange.com/questions/57494/geoserver-2-3-how-to-enable-jsonp 
+//    https://gis.stackexchange.com/questions/64406/getting-wfs-data-from-geoserver-into-leaflet
+
+let parameters = L.Util.extend(defaultParameters);
+const URL = rootUrl + L.Util.getParamString(parameters);
+
+let overlay;
+
+$.ajax({
+url: rootUrl + L.Util.getParamString(parameters),
+dataType: 'jsonp',
+jsonpCallback: 'getJson',
+success : function (response) {
+WFSLayer = L.geoJson(response, {
+style: function (feature) {
+return {
+
+stroke:false,
+fillColor: 'FFFFFF' ,
+fillOpacity:0 
+};
+},
+// Set the popup text/content for each point
+onEachFeature: function (feature, layer) {
+popupOptions = {maxWidth: 200};
+layer.bindPopup("<b>" + feature.properties.place_name + "</b><br>"
++ "<b>ID: </b><a href='http://192.168.16.31:5601/app/kibana#/discover?_g=()&_a=(columns:!(_source),index: f81e14c0-91b1-11e8-85bf-677bb0bf1eac,interval:auto,query:(language:lucene,query:%27" + feature.properties.tweet_id + "%27),sor t:!(_score,desc))'>" + feature.properties.tweet_id + "</a><br>"
++ "<b>Time: </b> " + feature.properties.date +" <br>"
++ "<b>Tweet:</b> \"" + feature.properties.text + "\" <br>"
++ "<b>Hashtags:</b> \"" + feature.properties.hashtags + "\" <br>"
++ "<b>Language: </b> \"" + feature.properties.lang + "\" <br>"
+
+,popupOptions);
+}
+}).addTo(map);
+}
+});
+ */
+   </script>
+</body>
+   </html>
