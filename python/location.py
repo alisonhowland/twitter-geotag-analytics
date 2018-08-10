@@ -102,36 +102,25 @@ def getTweet(json_text):
 def hasTweet(json_text):
    return len(getTweet(json_text)) >= 1
 
-#Returns a string that is the best location that could be pulled from the tweet
+#Returns a dictionary where the keys are all the locations pulled from the text, and they only have
+#Values if they're already in reddis
 def getTweetLocation(json_text, red, nlp):
    if getLanguage(json_text) != "en": #this program is not eqipped to deal with foriegn languages
-      return ""
+      return {}
 
    if hasTweet(json_text):
       tweet = getTweet(json_text)
    else:
-      return ""
+      return {} 
    doc = nlp(tweet)
    entities = doc.ents
-   locEntities = []
-   bestEntity = ""
+   locEntities = {}
    for entity in entities:
       if (entity.label_ == "LOC" or entity.label_ == "GPE"):
-         locEntities.append(entity)
+         locEntities[entity] = ""
          if redisHasKey(red, entity.text.lower()):
-            bestEntity = entity.text #Cross-checks redis db to find entity that is most likely to be a place
-   
-   numEntities = len(locEntities)
-   if bestEntity == "" and numEntities == 0:
-      return ""
-   elif bestEntity == "" and numEntities > 0:   
-      ret = locEntities[int(numEntities / 2)].text
-      if ret.find("@") >= 0 or ret.find("RT") >= 0:
-         return ""
-      else:
-         return ret
-   else:
-      return bestEntity
+            locEntities[entity] = red.get[entity.text.lower()]
+   return locEntities
 
 #Returns the language code of the JSON file. We probably shouldn't try to parse 
 #non-english languages with SpaCy
@@ -179,7 +168,7 @@ for file_name in files:
    
    if hasLocation(data) and hasTweet(data) and getLanguage(data) == "en":
       user_location = getLocation(data)
-      tweet_location = getTweetLocation(data, red, nlp)
+      tweet_location = getTweetLocation(data, red, nlp)#TODO makes this dictionary-friendly
       if redisHasKey(red, user_location.lower()) and redisHasKey(red, tweet_location.lower()):
          location = user_location
          data = setPrediction("LOCATION", data)

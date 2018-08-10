@@ -19,6 +19,7 @@ class TweetThread(threading.Thread):
          tweet.coordinates = str(geocoder.arcgis(tweet.location).latlng)
          print("\n\n\n\n*********" + str(i) + "\\" + str(len(self.tweetList)) + "//////////" + tweet.file_name + ": " + tweet.coordinates + "*********\n\n\n\n\n")
          for ref_key in tweet.ref_locations: #Goes through dictionary of Multipoints and finds loc
-            tweet.ref_locations[ref_key] = str(geocoder.arcgis(ref_key).latlng)
+            if tweet.ref_locations[ref_key] = "":
+               tweet.ref_locations[ref_key] = str(geocoder.arcgis(ref_key).latlng)
          i += 1
       self.done = True
