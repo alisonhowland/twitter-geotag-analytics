@@ -119,7 +119,7 @@ def getTweetLocation(json_text, red, nlp):
       if (entity.label_ == "LOC" or entity.label_ == "GPE"):
          locEntities[entity] = ""
          if redisHasKey(red, entity.text.lower()):
-            locEntities[entity] = red.get[entity.text.lower()]
+            locEntities[entity] = red.get(entity.text.lower()).decode("utf-8")
    return locEntities
 
 #Returns the language code of the JSON file. We probably shouldn't try to parse 
@@ -166,24 +166,16 @@ for file_name in files:
    data = json.read()
    json.close()
    
-   if hasLocation(data) and hasTweet(data) and getLanguage(data) == "en":
+   if True or (hasLocation(data) and hasTweet(data) and getLanguage(data) == "en"):#Cheat to make this block always hit
       user_location = getLocation(data)
       tweet_location = getTweetLocation(data, red, nlp)#TODO makes this dictionary-friendly
-      if redisHasKey(red, user_location.lower()) and redisHasKey(red, tweet_location.lower()):
-         location = user_location
-         data = setPrediction("LOCATION", data)
-      elif redisHasKey(red, user_location.lower()):
-         location = user_location
-         data = setPrediction("LOCATION", data)
-      else:
-         location = tweet_location
-         data = setPrediction("TWEET", data)
-   elif hasLocation(data): #it goes into this block if there's a location in the location tag 
+      location = user_location
+   '''elif hasLocation(data): #it goes into this block if there's a location in the location tag 
       location = getLocation(data)
       data = setPrediction("LOCATION", data)
    else:
       location = getTweetLocation(data, red, nlp)
-      data = setPrediction("TWEET", data)
+      data = setPrediction("TWEET", data)'''
 
    if location == "": #This should give a speed boost
       coordinates = None
