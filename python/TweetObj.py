@@ -5,6 +5,7 @@ class Tweet(object):
       self.location = location
       self.file_name = file_name
       self.coordinates = ""
+      self.ref_locations = {}
 
    def __str__(self):
       return self.json_text + " " + self.location + " " + self.file_name + " " + self.coordinates
