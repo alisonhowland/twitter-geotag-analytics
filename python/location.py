@@ -49,9 +49,9 @@ def setLocation(location, json_text):
 #Sets the mentioned_locations and mentioned_locations_coordinates tags in the JSON
 def setMentionedLocations(mentioned_locations, mentioned_coordinates, json_text):
    locindex = json_text.find("mentioned_locations\":") + len("mentioned_locations\":") + 1
-   coordindex = json_text.find("mentioned_locations_coordinates") + len("mentioned_locations_coordinates") + 3
    strloc = str(mentioned_locations).replace("[","").replace("]","")
    json_text = json_text[: locindex] + strloc + json_text[locindex :]
+   coordindex = json_text.find("mentioned_locations_coordinates") + len("mentioned_locations_coordina    tes") + 3
    json_text = json_text[: coordindex] + str(mentioned_coordinates) + json_text[coordindex :]
    return json_text
 

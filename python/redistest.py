@@ -102,9 +102,7 @@ out = str(listt).replace("[", "").replace("]", "")
 print(out)
 temp = {}
 temp["virginia"] = ""
-temp["dog"]
 for ref_key in temp:
-   temp[ref_key] = str(geocoder.arcgis(ref_key).latlng)
-   ref_key = "dog"
+   temp[ref_key] = geocoder.arcgis(ref_key).latlng
    print(ref_key, temp[ref_key])
 
