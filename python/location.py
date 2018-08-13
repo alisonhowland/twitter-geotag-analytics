@@ -49,10 +49,11 @@ def setLocation(location, json_text):
 #Sets the mentioned_locations and mentioned_locations_coordinates tags in the JSON
 def setMentionedLocations(mentioned_locations, mentioned_coordinates, json_text):
    locindex = json_text.find("mentioned_locations\":") + len("mentioned_locations\":") + 1
-   strloc = str(mentioned_locations).replace("[","").replace("]","")
+   strloc = str(mentioned_locations).replace("[","").replace("]","").replace("'", "")
    json_text = json_text[: locindex] + strloc + json_text[locindex :]
-   coordindex = json_text.find("mentioned_locations_coordinates") + len("mentioned_locations_coordina    tes") + 3
-   json_text = json_text[: coordindex] + str(mentioned_coordinates) + json_text[coordindex :]
+   coordindex = json_text.find("mentioned_locations_coordinates") + len("mentioned_locations_coordina    tes") - 1 #Don't know why but it works
+   formatting = str(mentioned_coordinates).replace("'", "")
+   json_text = json_text[: coordindex] + formatting + json_text[coordindex :]
    return json_text
 
 #Fills in the prediction_source tag with the appropriate text and returns the modified text
@@ -128,7 +129,7 @@ def getTweetLocation(json_text, red, nlp):
       if (entity.label_ == "LOC" or entity.label_ == "GPE"):
          locEntities[entity.text.lower()] = ""
          if redisHasKey(red, entity.text.lower()):
-            locEntities[entity.text.lower()] = red.get(entity.text.lower()).decode("utf-8")
+            locEntities[entity.text.lower()] = swapCoordinates(red.get(entity.text.lower()).decode("utf-8"))
    return locEntities
 
 #Returns the language code of the JSON file. We probably shouldn't try to parse 
