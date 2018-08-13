@@ -51,8 +51,8 @@ def setMentionedLocations(mentioned_locations, mentioned_coordinates, json_text)
    locindex = json_text.find("mentioned_locations\":") + len("mentioned_locations\":") + 1
    coordindex = json_text.find("mentioned_locations_coordinates") + len("mentioned_locations_coordinates") + 3
    strloc = str(mentioned_locations).replace("[","").replace("]","")
-   json_text = json_text[: locindex] + strloc + json_text[locindex + 1 :]
-   json_text = json_text[: coordindex] + str(mentioned_coordinates) + json_text[coordindex + 1 :]
+   json_text = json_text[: locindex] + strloc + json_text[locindex :]
+   json_text = json_text[: coordindex] + str(mentioned_coordinates) + json_text[coordindex :]
    return json_text
 
 #Fills in the prediction_source tag with the appropriate text and returns the modified text
