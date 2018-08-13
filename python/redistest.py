@@ -80,7 +80,7 @@ for key in keys:
    red.set(key, newval)
 
 print(red.get("va"))
-'''
+
 session = requests.Session()
 print(geocoder.arcgis("hells kitchen", session=session).latlng)
 print(geocoder.arcgis("vermont", session=session).latlng)
@@ -94,7 +94,10 @@ print(geocoder.arcgis("mississippi", session=session).latlng)
 print(geocoder.arcgis("virginia", session=session).latlng)
 session.close()
 #print(red.get())
-print(geocoder.arcgis("幸村くんの3歩後ろ").latlng)
+print(geocoder.arcgis("幸村くんの3歩後ろ").latlng) '''
 print(red.dbsize())
 red.save()
+listt = [1,2,3]
+out = str(listt).replace("[", "").replace("]", "")
+print(out)
 

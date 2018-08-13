@@ -46,6 +46,15 @@ def setLocation(location, json_text):
    outString = json_text[: index2 + 1] + location + json_text[index2 + 1 :]
    return outString
 
+#Sets the mentioned_locations and mentioned_locations_coordinates tags in the JSON
+def setMentionedLocations(mentioned_locations, mentioned_coordinates, json_text):
+   locindex = json_text.find("mentioned_locations\":") + len("mentioned_locations\":") + 1
+   coordindex = json_text.find("mentioned_locations_coordinates") + len("mentioned_locations_coordinates") + 3
+   strloc = mentioned_locations.replace("[","").replace("]","")
+   json_text = json_text[: locindex] + strloc + json_text[locindex + 1 :]
+   json_text = json_text[: coordindex] + str(mentioned_coordinates) + json_text[coordindex + 1 :]
+   return json_text
+
 #Fills in the prediction_source tag with the appropriate text and returns the modified text
 def setPrediction(prediction, json_text):
    start1 = json_text.find("prediction_source")
@@ -167,9 +176,8 @@ for file_name in files:
    json.close()
    
    if True or (hasLocation(data) and hasTweet(data) and getLanguage(data) == "en"):#Cheat to make this block always hit
-      user_location = getLocation(data)
+      location = getLocation(data)
       tweet_location = getTweetLocation(data, red, nlp)#TODO makes this dictionary-friendly
-      location = user_location
    '''elif hasLocation(data): #it goes into this block if there's a location in the location tag 
       location = getLocation(data)
       data = setPrediction("LOCATION", data)
@@ -182,7 +190,7 @@ for file_name in files:
    elif redisHasKey(red, location.lower()):
       coordinates = red.get(location.lower()).decode('utf-8')
    else: #Getting into funky threading stuff here. 
-      tweet = Tweet(data, location, file_name)
+      tweet = Tweet(data, location, file_name, tweet_location)
       thread[thread_counter].tweetList.append(tweet)
       if not thread[old_counter].running:
          coordinates = geocoderCall(thread[thread_counter])
@@ -196,6 +204,12 @@ for file_name in files:
          thread[old_counter] = TweetThread([])
          for tweet in tweet_list: #loops through tweets in list
             tweet.coordinates = swapCoordinates(tweet.coordinates)
+            mentioned_coordlist = []
+            mentioned_loc = []
+            for key in tweet.ref_locations: #Pulls apart dictionary
+               mentioned_loc.append(key)
+               mentioned_coordlist.append(swapCoordinates(tweet.ref_locations[key]))
+            tweet.json_text = setMentionedLocations(tweet.json_text)
             if tweet.coordinates != None and tweet.coordinates != "None" and tweet.coordinates != "[on, on]":
                red.set(tweet.location.lower(), str(tweet.coordinates))
                print("*********SUCCESS*********\n\n\n\n" + tweet.file_name + ": " + tweet.coordinates)
