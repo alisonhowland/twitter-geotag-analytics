@@ -126,9 +126,9 @@ def getTweetLocation(json_text, red, nlp):
    locEntities = {}
    for entity in entities:
       if (entity.label_ == "LOC" or entity.label_ == "GPE"):
-         locEntities[entity] = ""
+         locEntities[entity.text.lower()] = ""
          if redisHasKey(red, entity.text.lower()):
-            locEntities[entity] = red.get(entity.text.lower()).decode("utf-8")
+            locEntities[entity.text.lower()] = red.get(entity.text.lower()).decode("utf-8")
    return locEntities
 
 #Returns the language code of the JSON file. We probably shouldn't try to parse 
