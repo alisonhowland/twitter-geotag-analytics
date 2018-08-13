@@ -209,7 +209,7 @@ for file_name in files:
             for key in tweet.ref_locations: #Pulls apart dictionary
                mentioned_loc.append(key)
                mentioned_coordlist.append(swapCoordinates(tweet.ref_locations[key]))
-            tweet.json_text = setMentionedLocations(tweet.json_text)
+            tweet.json_text = setMentionedLocations(mentioned_loc, mentioned_coordlist, tweet.json_text)
             if tweet.coordinates != None and tweet.coordinates != "None" and tweet.coordinates != "[on, on]":
                red.set(tweet.location.lower(), str(tweet.coordinates))
                print("*********SUCCESS*********\n\n\n\n" + tweet.file_name + ": " + tweet.coordinates)
@@ -238,7 +238,13 @@ for activeThread in thread: #When the program has ended waits for the threads to
 for inactiveThread in thread: #Writes tweets from geocoder calls to json file
    tweet_list = inactiveThread.tweetList
    for tweet in tweet_list:
-      tweet.coordinates = swapCoordinates(tweet.coordinates) 
+      tweet.coordinates = swapCoordinates(tweet.coordinates)
+      mentioned_coordlist = []
+      mentioned_loc = []
+      for key in tweet.ref_locations: #Pulls apart dictionary
+         mentioned_loc.append(key)
+         mentioned_coordlist.append(swapCoordinates(tweet.ref_locations[key]))
+      tweet.json_text = setMentionedLocations(mentioned_loc, mentioned_coordlist, tweet.json_text)
       if tweet.coordinates != None and tweet.coordinates != "None" and tweet.coordinates != "[on, on]" and tweet.coordinates != "[, ]":
          red.set(tweet.location.lower(), str(tweet.coordinates))
          print("*********SUCCESS*********\n\n\n\n" + tweet.file_name + ": " + tweet.coordinates)
