@@ -1,0 +1,92 @@
+<!--  map/index.html-->
+
+<html>
+<head>
+<title>Tweet Geolocation Tagging</title>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+
+<!-- Load Leaflet code library - see updates at http://leafletjs.com/download.html -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css"/>
+<!-- Load jQuery-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+<!-- Load Omnivore plugin to convert CSV to GeoJSON format -->
+<script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
+<!-- Load Esri Leaflet from CDN -->
+<script src="https://unpkg.com/esri-leaflet@2.2.2/dist/esri-leaflet.js"
+integrity="sha512-cll/dcqNKG7yfQBrTbRNzGQ70Bh4m+J5jnvU97tPyMnWsD1Ry+CXi0JE+T7Rk54pdJEYlRgXtpwxa9sUqzUAyg=="
+    crossorigin=""></script>
+
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+
+<!-- jQuery and jQuery-ui -->
+<link rel="stylesheet" href="jquery-ui/jquery-ui-themes/themes/cupertino/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
+<script
+	src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
+
+<link rel="stylesheet" type="text/css" href="css/leaflet-jquerydialog.css" />
+    <script type="text/javascript" src="js/leaflet-jquerydialog.js"></script>
+	<style type="text/css">
+   .date-dialog {
+        font-size: 12px;
+        margin-left:10px
+     }
+    .ui-datepicker {
+        font-size: 12px;
+        margin-left:10px
+     }
+</style>
+</head>
+<body>
+
+<div id="map-title">Geolocation Tagging of Twitter Data</div>
+<div id="map"> </div>
+<!-- the dialog that we'll be opening with the control -->
+<div id="date-dialog" class="ui-dialog" title = "Filter by Date">
+   <input type="hidden" autofocus="autofocus" />
+    <form action="#" id="form" class="ui-widget"/>
+	 <label for="from" class="ui-widget">
+		 Select date
+	    <input type="text" id="datepicker" name="date"/>
+	 </label>
+</form>
+
+</div>
+
+<script type="text/javascript" src="js/script.js"></script>
+<!--
+      <label for="to">
+	 To 
+	 <input id='to' type="text" name='to'/>
+      </label>
+-->
+<!-- 
+   <div id="time-ranges" class="leaflet-bar">
+
+      <input id = "date-picker-button" class="onright"  value="Select Date"/>
+      <form action="#" id="form"/>
+	 <label for="from">
+	    From
+	    <input type="text" id="from" name="from"/>
+	 </label>
+	 <label for="to">
+	    To
+	    <input id='to' type="text" name='to'/>
+	 </label>
+	 <input type="submit" id = "updateButtonvalue" value="Update"/>
+	 <input type="cancel" id="cancelButton" value="Close"/>
+</form>
+
+   </div>
+   -->
+
+
+</html>
