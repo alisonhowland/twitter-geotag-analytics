@@ -291,7 +291,7 @@ $.ajax({
 	    popupOptions = {maxWidth: 200};
 	    // Identify whether layer is a prediction or not
 	    layer.bindPopup("<b>" + feature.properties.place_name + "</b><br>"
-	       + "<b>ID: </b><a href='http://192.168.16.31:5601/app/kibana#/discover?_g=()&_a =(columns:!(_source),index:f81e14c0-91b1-11e8-85bf-677bb0bf1eac,interval:auto ,query:(language:lucene, query:%27" + feature.properties.tweet_id + "%27),sort:!(_score,desc))'>" + feature.properties.tweet_id  + "</a><br>"
+	       + "<b>ID: </b><a href='http://192.168.16.31:5601/app/kibana#/discover?_g=()&_a=(columns:!(_source),index:f81e14c0-91b1-11e8-85bf-677bb0bf1eac,interval:auto,query:(language:lucene,query:%27" + feature.properties.tweet_id + "%27),sort:!(_score,desc))'>" + feature.properties.tweet_id  + "</a><br>"
 	       + "<b>Time: </b> " + feature.properties.date +" <br>"
 	       + "<b>Tweet:</b> \"" + feature.properties.tweet_text + "\" <br>"
 	       + "<b>Hashtags:</b> \"" + feature.properties.hashtags + "\" <br>"
@@ -323,7 +323,7 @@ $.ajax({
 	    popupOptions = {maxWidth: 200};
 	    // Identify whether layer is a prediction or not
 	    layer.bindPopup("<b>" + feature.properties.place_name + "</b><br>"
-	       + "<b>ID: </b><a href='http://192.168.16.31:5601/app/kibana#/discover?_g=()&_a =(columns:!(_source),index:f81e14c0-91b1-11e8-85bf-677bb0bf1eac,interval:auto ,query:(language:lucene, query:%27" + feature.properties.tweet_id + "%27),sort:!(_score,desc))'>" + feature.properties.tweet_id  + "</a><br>"
+	       + "<b>ID: </b><a href='http://192.168.16.31:5601/app/kibana#/discover?_g=()&_a=(columns:!(_source),index:f81e14c0-91b1-11e8-85bf-677bb0bf1eac,interval:auto,query:(language:lucene,query:%27" + feature.properties.tweet_id + "%27),sort:!(_score,desc))'>" + feature.properties.tweet_id  + "</a><br>"
 	       + "<b>Time: </b> " + feature.properties.date +" <br>"
 	       + "<b>Tweet:</b> \"" + feature.properties.tweet_text + "\" <br>"
 	       + "<b>Hashtags:</b> \"" + feature.properties.hashtags + "\" <br>"
@@ -358,7 +358,7 @@ $.ajax({
 	 onEachFeature: function (feature, layer) {
 	    popupOptions = {maxWidth: 200};
 	    layer.bindPopup("<b> Predicted location: " + feature.properties.place_name + "</b><br>"
-	       + "<b>ID: </b><a href='http://192.168.16.31:5601/app/kibana#/discover?_g=()&_a =(columns:!(_source),index:f81e14c0-91b1-11e8-85bf-677bb0bf1eac,interval:auto ,query:(language:lucene, query:%27" + feature.properties.tweet_id + "%27),sort:!(_score,desc))'>" + feature.properties.tweet_id  + "</a><br>"
+	       + "<b>ID: </b><a href='http://192.168.16.31:5601/app/kibana#/discover?_g=()&_a=(columns:!(_source),index:f81e14c0-91b1-11e8-85bf-677bb0bf1eac,interval:auto ,query:(language:lucene, query:%27" + feature.properties.tweet_id + "%27),sort:!(_score,desc))'>" + feature.properties.tweet_id  + "</a><br>"
 	       + "<b>Time: </b> " + feature.properties.date +" <br>"
 	       + "<b>Tweet:</b> \"" + feature.properties.tweet_text + "\" <br>"
 	       + "<b>Hashtags:</b> \"" + feature.properties.hashtags + "\" <br>"
