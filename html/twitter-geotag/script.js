@@ -31,7 +31,7 @@ $('#datepicker').datepicker({
       locationWMS = getWMSLayerDateFilter(dateText, wmsURL, 'tweets_with_location');
       predictionWMS= getWMSLayerDateFilter(dateText, wmsURL, 'tweets_predicted_locations');
       controlLayers.addOverlay(locationWMS, 'Actual Locations')
-      controlLayers.addOverlay(predictionWMS, 'Predicted Locations');
+      controlLayers.addOverlay(predictionWMS, 'Derived Locations');
       map.addLayer(locationWMS);
       map.addLayer(predictionWMS);
       // Add as the default layer to load
@@ -143,13 +143,13 @@ let reports = L.esri.Heat.heatmapFeatureLayer({
    /* Carto light-gray basemap tiles with labels */
    let light = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.pn g', {
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a  href="https://carto.com/attribution">CARTO</a>'
-   }); // EDIT - insert or remove ".addTo(map)" before last semicolon to display by default
+   }).addTo(map); // EDIT - insert or remove ".addTo(map)" before last semicolon to display by default
    controlLayers.addBaseLayer(light, 'Light basemap');
 
    /* Stamen colored terrain basemap tiles with labels */
    let terrain = L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png', {
       attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.'
-   }).addTo(map); // EDIT - insert or remove ".addTo(map)" before last semicolon to display by default
+   }); // EDIT - insert or remove ".addTo(map)" before last semicolon to display by default
    controlLayers.addBaseLayer(terrain, 'Terrain basemap 1');
 
    // load a tile layer
@@ -240,7 +240,7 @@ function dateFilteredWMSLayer(startDate, endDate){
       //    changing zoom levels and/or selecting or deselecting the layer control option
 
       controlLayers.addOverlay(locationWMS, 'Actual Locations');
-      controlLayers.addOverlay(predictionWMS, 'PredictedLocations');
+      controlLayers.addOverlay(predictionWMS, 'Derived Locations');
       // Add as the default layer to load
       map.addLayer(locationWMS);
       //let WMSLayer = getWMSLayer();
@@ -248,6 +248,7 @@ function dateFilteredWMSLayer(startDate, endDate){
       // --- Function that loads the WFS layer to the map ----
       var locationWFS = null;
       var predictionWFS = null;
+
       function getWFSurl(wfsURL, layerName ) {
 	 // define WFS default parameters 
 	 let defaultParameters = {
@@ -257,7 +258,7 @@ function dateFilteredWMSLayer(startDate, endDate){
 	    typeName : 'cite:' + layerName,
 	    outputFormat : 'text/javascript',
 	    format_options : 'callback:getJson' + layerName,
-	    maxFeatures: 200,
+	    maxFeatures: 1000,
 	    //   format_options :  'callback: getJson',
 	    SrsName : 'EPSG:4326'
 	 };
@@ -288,11 +289,12 @@ $.ajax({
 	 },
 	 // Set the popup text/content for each point
 	 onEachFeature: function (feature, layer) {
-	    popupOptions = {maxWidth: 200};
+	    popupOptions = {maxWidth: 700};
 	    // Identify whether layer is a prediction or not
 	    layer.bindPopup("<b>" + feature.properties.place_name + "</b><br>"
 	       + "<b>ID: </b><a href='http://192.168.16.31:5601/app/kibana#/discover?_g=()&_a=(columns:!(_source),index:f81e14c0-91b1-11e8-85bf-677bb0bf1eac,interval:auto,query:(language:lucene,query:%27" + feature.properties.tweet_id + "%27),sort:!(_score,desc))'>" + feature.properties.tweet_id  + "</a><br>"
-	       + "<b>Time: </b> " + feature.properties.date +" <br>"
+	       + "<b>Timestamp(ingest): </b> " + feature.properties.ingest_date+" <br>"
+	       + "<b>Tweet Date: </b> " + feature.properties.timestamp+" <br>"
 	       + "<b>Tweet:</b> \"" + feature.properties.tweet_text + "\" <br>"
 	       + "<b>Hashtags:</b> \"" + feature.properties.hashtags + "\" <br>"
 	       ,popupOptions);
@@ -320,11 +322,11 @@ $.ajax({
 	 },
 	 // Set the popup text/content for each point
 	 onEachFeature: function (feature, layer) {
-	    popupOptions = {maxWidth: 200};
+	    popupOptions = {maxWidth: 700};
 	    // Identify whether layer is a prediction or not
 	    layer.bindPopup("<b>" + feature.properties.place_name + "</b><br>"
 	       + "<b>ID: </b><a href='http://192.168.16.31:5601/app/kibana#/discover?_g=()&_a=(columns:!(_source),index:f81e14c0-91b1-11e8-85bf-677bb0bf1eac,interval:auto,query:(language:lucene,query:%27" + feature.properties.tweet_id + "%27),sort:!(_score,desc))'>" + feature.properties.tweet_id  + "</a><br>"
-	       + "<b>Time: </b> " + feature.properties.date +" <br>"
+	       + "<b>Time: </b> " + feature.properties.timestamp+" <br>"
 	       + "<b>Tweet:</b> \"" + feature.properties.tweet_text + "\" <br>"
 	       + "<b>Hashtags:</b> \"" + feature.properties.hashtags + "\" <br>"
 	       + "<b>Mentioned Locations: </b> " + feature.properties.mentioned_locations + " <br>"
