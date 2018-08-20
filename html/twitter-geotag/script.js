@@ -8,20 +8,20 @@ $( function() {
    });
 } );
 $( "#dialog" ).dialog({
-    create: function(e, ui) {
-        // 'this' is #dialog
-        // get the whole widget (.ui-dialog) with .dialog('widget')
-        $(this).dialog('widget')
-            // find the title bar element
-            .find('.ui-dialog-titlebar')
-            // alter the css classes
-            .removeClass('ui-corner-all')
-            .addClass('ui-corner-top');
-    }
+   create: function(e, ui) {
+      // 'this' is #dialog
+      // get the whole widget (.ui-dialog) with .dialog('widget')
+      $(this).dialog('widget')
+      // find the title bar element
+	 .find('.ui-dialog-titlebar')
+      // alter the css classes
+	 .removeClass('ui-corner-all')
+	 .addClass('ui-corner-top');
+   }
 });
 
 $.datepicker.setDefaults({
-       dateFormat: 'yy-mm-dd'
+   dateFormat: 'yy-mm-dd'
 });
 // Clear and update the map's existing layers when a date is selected
 //     from the datepicker
@@ -99,22 +99,22 @@ L.easyButton('<img src="/path/to/img/of/penguin.png">', function(btn, map){
    L.control.zoom({
       position:'topleft'
    }).addTo(map);
-   
-(function() {
+
+   (function() {
       var control = new L.Control({position:'topleft'});
       control.onAdd = function(map) {
-		  var azoom = L.DomUtil.create('a','resetzoom');
-		  azoom.innerHTML = "Reset Zoom";
-		  L.DomEvent
-		     .disableClickPropagation(azoom)
-		     .addListener(azoom, 'click', function() {
-				       map.setView(map.options.center, map.options.zoom);
-				    },azoom);
-		  return azoom;
-	       };
+	 var azoom = L.DomUtil.create('a','resetzoom');
+	 azoom.innerHTML = "Reset Zoom";
+	 L.DomEvent
+	    .disableClickPropagation(azoom)
+	    .addListener(azoom, 'click', function() {
+	       map.setView(map.options.center, map.options.zoom);
+	    },azoom);
+	 return azoom;
+      };
       return control;
-}())
-.addTo(map);
+   }())
+      .addTo(map);
 
    L.control.scale().addTo(map);
    return map;
@@ -180,8 +180,8 @@ var controlLayers = createLayerController();
 $('#date-dialog').dialog({
    modal: false, autoOpen: false, closeOnEsc: true,
    open: function() {
-	    $("#date-dialog").css("z-index", $(this).parents(".ui-dialog").css("z-index")+1);
- //  position: { my:'left bottom', at:'top', or:'#map' }
+      $("#date-dialog").css("z-index", $(this).parents(".ui-dialog").css("z-index")+1);
+      //  position: { my:'left bottom', at:'top', or:'#map' }
    }});
 
 new L.Control.jQueryDialog({
@@ -327,6 +327,8 @@ $.ajax({
 	    layer.bindPopup("<b>" + feature.properties.place_name + "</b><br>"
 	       + "<b>ID: </b><a href='http://192.168.16.31:5601/app/kibana#/discover?_g=()&_a=(columns:!(_source),index:f81e14c0-91b1-11e8-85bf-677bb0bf1eac,interval:auto,query:(language:lucene,query:%27" + feature.properties.tweet_id + "%27),sort:!(_score,desc))'>" + feature.properties.tweet_id  + "</a><br>"
 	       + "<b>Time: </b> " + feature.properties.timestamp+" <br>"
+	       + "<b>Timestamp(ingest): </b> " + feature.properties.ingest_date+" <br>"
+	       + "<b>Tweet:</b> \"" + feature.properties.tweet_text + "\" <br>"
 	       + "<b>Tweet:</b> \"" + feature.properties.tweet_text + "\" <br>"
 	       + "<b>Hashtags:</b> \"" + feature.properties.hashtags + "\" <br>"
 	       + "<b>Mentioned Locations: </b> " + feature.properties.mentioned_locations + " <br>"
