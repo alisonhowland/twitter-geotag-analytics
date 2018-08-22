@@ -1,4 +1,3 @@
 spacy
 redis
 geocoder
-pickle
