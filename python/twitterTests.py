@@ -2,6 +2,8 @@ import unittest
 import redis
 import location
 
+#*******TODO: Make it so the main body of location.py doesn't run everytime I run tests*********
+
 with open("/var/local/code/sampleJSON/sampleIn.json", "r") as json:
    json_text = json.read()
 red = redis.Redis(host='localhost', port=6379, password='')

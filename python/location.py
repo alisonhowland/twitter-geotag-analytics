@@ -41,9 +41,11 @@ def getLocation(json_text):
 #Sets the user's location in the json file. Only to be used from within writeCoordinates
 #returns json_text formatted with location
 def setLocation(location, json_text):
-   index = json_text.find("user_location")
-   index2 = json_text.find("\"", index + len("user_location") + 2)
-   outString = json_text[: index2 + 1] + location + json_text[index2 + 1 :]
+   start1 = json_text.find("user_location")
+   start2 = len("user_location") + start1 + 1
+   end1 = json_text.find("\"", start2)
+   end2 = json_text.find("\"", end1 + 1)
+   outString = json_text[: end1 + 1] + location + json_text[end2 :]
    return outString
 
 #Sets the mentioned_locations and mentioned_locations_coordinates tags in the JSON
