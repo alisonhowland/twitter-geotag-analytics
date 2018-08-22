@@ -5,5 +5,5 @@ setup(name='TwitterNLP',
       author='Jake Crawford',
       description='The package for the python Twitter project',
       py_modules=['location','TweetObj','TweetThread','twitterTests'],
-      install_requires=['spacy','redis','geocoder','pickle'],
+      install_requires=['spacy','redis','geocoder','pickle',],
       )
