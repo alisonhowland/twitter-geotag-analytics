@@ -29,6 +29,7 @@ class TestTwitter(unittest.TestCase):
    def testHasLocation(self):
       self.assertTrue(location.hasLocation(json_text))
 
+   #Makes sure it properly tests for None
    def testSwapCoordinates(self):
       self.assertEqual(location.swapCoordinates("[1.1, 2.2]"), "[2.2, 1.1]")
       self.assertEqual(location.swapCoordinates(None), None)
