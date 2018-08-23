@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='TwitterNLP',
-      version='1.0',
+      version='0.1',
       author='Jake Crawford',
       description='The package for the python Twitter project',
       py_modules=['location','TweetObj','TweetThread','twitterTests'],
